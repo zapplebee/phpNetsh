@@ -1,6 +1,6 @@
 <?php
 session_start();
-
+header('Content-Type: application/json');
 
 $profiles_raw = shell_exec('netsh wlan show profiles');
 
