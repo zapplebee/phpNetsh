@@ -19,20 +19,20 @@ function printProfile($profile){
 }
 
 
-function updatePassword($profile){
-  
-  
+function updatePassword($SSID,$password){
 
-  
-//file_put_contents($profile['filepath']);
-  
 
-  
+  $_SESSION['profiles'][$SSID]['fulltext'] = preg_replace("/<keyMaterial>".$_SESSION['profiles'][$SSID]['keyMaterial']."<\/keyMaterial>/", "<keyMaterial>".$password."</keyMaterial>", $_SESSION['profiles'][$SSID]['fulltext']);
+  file_put_contents($_SESSION['profiles'][$SSID]['filepath'],$_SESSION['profiles'][$SSID]['fulltext']);
+
+  $output = shell_exec('Netsh WLAN add profile filename="'.$_SESSION['profiles'][$SSID]['filepath'].'" user=' . strtolower($_SESSION['profiles'][$SSID]['scope']));
+
+  if($output !== "Profile ".$_SESSION['profiles'][$SSID]['SSID']." is added on interface Wi-Fi.\n"){
+    throw new Exception($output);
+  }
+
+
 }
-
-
-
-
    
 try {
   
@@ -93,15 +93,11 @@ try {
   $_SESSION['profiles'][$SSID]['authentication'] = $authentication[1][0];
   
   
-  
-  
-  
-  
-  
-  
-  printProfile($_SESSION['profiles'][$SSID]);
-  
-  
+  if(isset($_POST['password'])){
+    updatePassword($SSID,$_POST['password']);
+  } else {
+    printProfile($_SESSION['profiles'][$SSID]);
+  }
   
   
 } catch (Exception $e){
