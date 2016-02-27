@@ -14,7 +14,7 @@ $ssids  = $profiles[1];
 
 for($i = 0 ; $i < count($scopes); $i++){
   
-  $_SESSION['profiles'][$i] = array(
+  $_SESSION['profiles'][$ssids[$i]] = array(
   
     'SSID' => $ssids[$i],
     'scope' => $scopes[$i],
