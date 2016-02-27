@@ -1,40 +1,44 @@
 <?php
-session_start();
+if($_SERVER['HTTP_HOST'] !== "127.0.0.1"){
+    header("HTTP/1.1 403 Unauthorized" );
+    exit;
+}
 header('Content-Type: application/json');
+session_start();
 
 
 function jecho($array){
-  
+
   echo json_encode($array);
-  
+
 }
 
 function printProfile($profile){
-  
+
   unset($profile['fulltext']);
   unset($profile['filepath']);
   echo json_encode($profile);
-  
-  
-}
 
+}
 
 function updatePassword($SSID,$password){
 
-
-  $_SESSION['profiles'][$SSID]['fulltext'] = preg_replace("/<keyMaterial>".$_SESSION['profiles'][$SSID]['keyMaterial']."<\/keyMaterial>/", "<keyMaterial>".$password."</keyMaterial>", $_SESSION['profiles'][$SSID]['fulltext']);
+  $password = htmlspecialchars($password, ENT_XML1, 'UTF-8');
+  $_SESSION['profiles'][$SSID]['fulltext'] = preg_replace("/<keyMaterial>(.*)<\/keyMaterial>/", "<keyMaterial>".$password."</keyMaterial>", $_SESSION['profiles'][$SSID]['fulltext']);
   file_put_contents($_SESSION['profiles'][$SSID]['filepath'],$_SESSION['profiles'][$SSID]['fulltext']);
-
+  
   $output = shell_exec('Netsh WLAN add profile filename="'.$_SESSION['profiles'][$SSID]['filepath'].'" user=' . strtolower($_SESSION['profiles'][$SSID]['scope']));
 
   if($output !== "Profile ".$_SESSION['profiles'][$SSID]['SSID']." is added on interface Wi-Fi.\n"){
     throw new Exception($output);
+  } else {
+    echo json_encode(array('success' => str_replace("added", "updated", $output)));
   }
-
 
 }
    
 try {
+  
   
   //Create an array of filepaths that will be deleted in the finally statement
   $filepaths = array();
@@ -108,7 +112,7 @@ try {
   
   foreach ($filepaths as $file){
     
-    //unlink($file);
+    unlink($file);
     
   }
   
