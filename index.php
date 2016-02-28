@@ -2,6 +2,7 @@
 <html>
 <head>
 <title>phpNetsh</title>
+<script src="apiinterface.js"></script>
 <style>
 *{
   box-sizing: border-box;
@@ -109,49 +110,7 @@ form input {
 </div>
 
 <script>
-
-li = document.querySelectorAll('li');
-h  = document.querySelectorAll('h2');
-passes  = document.querySelectorAll('input[name="password"]');
-auths  = document.querySelectorAll('input[name="auth"]');
-forms  = document.querySelectorAll('form');
-
-
-
-for(var i = 0 ; i < li.length; i++){
-  li[i].style.maxHeight = '44px';
-  li[i].addEventListener('click',toggleHandler,true);
-}
-
-
-
-function nearest(element,tag){
-  if (element.tagName != tag.toUpperCase()) {
-    return nearest(element.parentElement,tag);
-  }else{
-    return element;
-  }
-}
-
-
-
-function toggleHandler(e,b){
-    element = nearest(e.target,'li');
-    for(i = 0 ; i < li.length ; i++){
-      if(li[i] != element){
-        li[i].style.maxHeight = '44px';
-      }else {
-        li[i].style.maxHeight = '88px';
-      }
-    }
-  
-}
-
-
-
-
-
-
+phpnetshinit();
 </script>
 
 </body>

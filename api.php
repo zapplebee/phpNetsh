@@ -58,8 +58,6 @@ class TempFilesHandler {
     }
   }
 }
-
-
 $f = new TempFilesHandler();
 
 function phpNetsh_getProfiles(){
